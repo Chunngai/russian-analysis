@@ -25,16 +25,16 @@ def get_pos_of_last_vowel(word):
     return None
 
 
-def remove_accent_mark(word, should_normalize_jo=False):
+def remove_accent_mark(word):
     word = word.replace(
         ACCENT_MARK,
         ""
     )
-    if should_normalize_jo:
-        word = word.replace(
-            "ё",
-            "е",
-        )
+    # if should_normalize_jo:
+    #     word = word.replace(
+    #         "ё",
+    #         "е",
+    #     )
     return word
 
 

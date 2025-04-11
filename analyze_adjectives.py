@@ -249,6 +249,44 @@ def fix_adjective_analyses(adjective_analyses):
                 if decl_form["bare"] == "киcлы":
                     decl_form["bare"] = "кислы"
                     decl_form["accented"] = "кислы'"
+
+        if d["bare"] == "свободный":
+           d["ground_truth_decls"]["comparative"][0]["accented"] = "свобо'днее"
+
+        if d["bare"] == "нужный":
+           d["ground_truth_decls"]["comparative"][0]["accented"] = "нужне'е"
+
+        if d["bare"] == "грустный":
+           d["ground_truth_decls"]["comparative"][0]["accented"] = "грустне'е"
+
+        if d["bare"] == "кислый":
+           d["ground_truth_decls"]["comparative"][0]["accented"] = "кисле'е"
+
+        if d["bare"] == "чистый":
+           d["ground_truth_decls"]["comparative"][0]["accented"] = "чисте'йший"
+
+        if d["bare"] == "точный":
+           d["ground_truth_decls"]["comparative"][1]["accented"] = "точне'й"
+
+        if d["bare"] == "некоторый":
+            d["ground_truth_decls"]["prep_n"][0]["accented"] = "не'котором"
+
+        if d["bare"] in [
+            "играемый",
+            "изучаемый",
+            "написанный",
+            "переводимый",
+            "полученный",
+            "проводимый",
+            "сформированный",
+            "говоримый",
+            "знаемый",
+        ]:
+            for gender_or_pl in ["m", "f", "n", "pl"]:
+                d["ground_truth_decls"][f"short_{gender_or_pl}"][0]["accented"] = insert_accent_mark(
+                    d["ground_truth_decls"][f"short_{gender_or_pl}"][0]["accented"],
+                    get_accent_pos(d["accented"]),
+                )
         
         # if (
         #     "translations" not in d["meta"]
@@ -342,11 +380,11 @@ def make_row(d):
             for i, ground_truth_decl_form in enumerate(ground_truth_decl_forms):
                 ground_truth_decl_form_ = remove_accent_mark(
                     ground_truth_decl_form,
-                    should_normalize_jo=True,
+                    # should_normalize_jo=True,
                 )
                 rule_based_decl_form_ = remove_accent_mark(
                     rule_based_decl_form,
-                    should_normalize_jo=True,
+                    # should_normalize_jo=True,
                 )
                 
                 if (
@@ -355,7 +393,10 @@ def make_row(d):
                     or ground_truth_decl_form_ == "по" + rule_based_decl_form_[:-2] + "ей"
                 ):
                     print("Fixing по/ей in comparative:", d["accented"], ground_truth_decl_form)
-                    irregular_declension_indices.remove(i)
+                    if i in irregular_declension_indices:
+                        irregular_declension_indices.remove(i)
+                    if i in accent_change_indices:
+                        accent_change_indices.remove(i)
 
         irregular_declension_indices.sort()
         accent_change_indices.sort()
@@ -494,7 +535,7 @@ if __name__ == '__main__':
         f"#translations: {len(translations):,}"
     )
 
-    fp_analyses = "adjective_analyses.csv"
+    fp_analyses = "russian_word_analyses/files/adjective_analyses.csv"
     main(
         tokens=tokens,
         adjectives=adjectives,

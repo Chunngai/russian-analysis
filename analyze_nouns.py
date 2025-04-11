@@ -495,7 +495,7 @@ if __name__ == '__main__':
         f"#translations: {len(translations):,}"
     )
 
-    fp_analyses = "noun_analyses.csv"
+    fp_analyses = "russian_word_analyses/files/noun_analyses.csv"
     main(
         tokens=tokens,
         nouns=nouns,
